@@ -25,5 +25,57 @@ namespace Catalog.API.Repositories
                             .Find(x => true)
                             .ToListAsync();
         }
+
+        public async Task<Product> GetProduct(string id)
+        {
+            return await _context
+                            .Products
+                            .Find(x => x.Id == id)
+                            .FirstOrDefaultAsync();
+        }
+
+        public async Task<Product> GetProductByName(string name)
+        {
+            var filter = Builders<Product>.Filter.Eq(x => x.Name, name);
+
+            return await _context
+                            .Products
+                            .Find(filter)
+                            .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetProductByCategory(string categoryName)
+        {
+            var filter = Builders<Product>.Filter.Eq(x => x.Name, categoryName);
+
+            return await _context
+                            .Products
+                            .Find(filter)
+                            .ToListAsync();
+        }
+
+        public async Task CreateProduct(Product product)
+        {
+            await _context.Products.InsertOneAsync(product);
+        }
+
+        public async Task<bool> UpdateProduct(Product product)
+        {
+            var result = await _context
+                                .Products
+                                .ReplaceOneAsync(filter: x => x.Id == product.Id, replacement: product);
+
+            return result.IsAcknowledged && result.ModifiedCount > 0;
+        }
+
+        public async Task<bool> DeleteProduct(string id)
+        {
+            var filter = Builders<Product>.Filter.Eq(x => x.Id, id);
+            var result = await _context
+                                .Products
+                                .DeleteOneAsync(filter);
+
+            return result.IsAcknowledged && result.DeletedCount > 0;
+        }
     }
 }

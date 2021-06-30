@@ -19,9 +19,9 @@ namespace Catalog.API.Repositories
         
         Task CreateProduct(Product product);
         
-        Task UpdateProduct(Product product);
+        Task<bool> UpdateProduct(Product product);
         
-        Task DeleteProduct(string id);
+        Task<bool> DeleteProduct(string id);
 
 
 
