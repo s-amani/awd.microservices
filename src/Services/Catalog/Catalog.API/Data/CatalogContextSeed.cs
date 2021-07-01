@@ -1,4 +1,5 @@
 ﻿using Catalog.API.Entities;
+using Catalog.API.Entities.Base;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,12 @@ namespace Catalog.API.Data
 {
     public class CatalogContextSeed
     {
-        public static void Seed(IMongoCollection<Product> products)
+        public static void Seed<T>(IMongoCollection<T> collection) where T : EntityBase
         {
-            if (products.Find(p => true).Any())
+            if (collection.Find(p => true).Any())
                 return;
 
-            products.InsertMany(GetPreconfiguredProducts());
+            //collection.InsertMany(GetPreconfiguredProducts());
         }
 
         private static IEnumerable<Product> GetPreconfiguredProducts()

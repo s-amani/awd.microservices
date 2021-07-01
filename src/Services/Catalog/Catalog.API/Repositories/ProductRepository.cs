@@ -8,38 +8,18 @@ using System.Threading.Tasks;
 
 namespace Catalog.API.Repositories
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
-        private readonly ICatalogContext _context;
-
-        public ProductRepository(ICatalogContext context)
+        public ProductRepository(ICatalogContext<Product> context) : base(context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-        }
-
-
-        public async Task<IEnumerable<Product>> GetProducts()
-        {
-            return await _context
-                            .Products
-                            .Find(x => true)
-                            .ToListAsync();
-        }
-
-        public async Task<Product> GetProduct(string id)
-        {
-            return await _context
-                            .Products
-                            .Find(x => x.Id == id)
-                            .FirstOrDefaultAsync();
         }
 
         public async Task<Product> GetProductByName(string name)
         {
             var filter = Builders<Product>.Filter.Eq(x => x.Name, name);
 
-            return await _context
-                            .Products
+            return await Context
+                            .Collection
                             .Find(filter)
                             .FirstOrDefaultAsync();
         }
@@ -48,34 +28,10 @@ namespace Catalog.API.Repositories
         {
             var filter = Builders<Product>.Filter.Eq(x => x.Category, categoryName);
 
-            return await _context
-                            .Products
+            return await Context
+                            .Collection
                             .Find(filter)
                             .ToListAsync();
-        }
-
-        public async Task CreateProduct(Product product)
-        {
-            await _context.Products.InsertOneAsync(product);
-        }
-
-        public async Task<bool> UpdateProduct(Product product)
-        {
-            var result = await _context
-                                .Products
-                                .ReplaceOneAsync(filter: x => x.Id == product.Id, replacement: product);
-
-            return result.IsAcknowledged && result.ModifiedCount > 0;
-        }
-
-        public async Task<bool> DeleteProduct(string id)
-        {
-            var filter = Builders<Product>.Filter.Eq(x => x.Id, id);
-            var result = await _context
-                                .Products
-                                .DeleteOneAsync(filter);
-
-            return result.IsAcknowledged && result.DeletedCount > 0;
         }
     }
 }
