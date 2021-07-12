@@ -23,22 +23,22 @@ namespace Catalog.API.Repositories
         public async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>> expression = null) =>
                         await Context
                             .Collection
-                            .Find(expression)
+                            .Find(expression == null ? x => true : expression)
                             .ToListAsync();
 
-        public async Task<IEnumerable<T>> GetAll(FilterDefinition<T> filter = null) => 
+        public async Task<IEnumerable<T>> GetAll(FilterDefinition<T> filter = null) =>
                         await Context
                             .Collection
                             .Find(filter)
                             .ToListAsync();
 
-        public async Task<T> GetOne(Expression<Func<T, bool>> expression = null) => 
+        public async Task<T> GetOne(Expression<Func<T, bool>> expression = null) =>
                         await Context
                             .Collection
-                            .Find(expression)
+                            .Find(expression == null ? x => true : expression)
                             .FirstOrDefaultAsync();
 
-        public async Task<T> GetOne(FilterDefinition<T> filter = null) => 
+        public async Task<T> GetOne(FilterDefinition<T> filter = null) =>
                         await Context
                             .Collection
                             .Find(filter)

@@ -13,6 +13,9 @@ services:
   pgadmin:
     image: dpage/pgadmin4
 
+  mongoclient:
+    image: mongoclient/mongoclient
+
   portainer:
     image: portainer/portainer-ce
 
@@ -35,9 +38,17 @@ services:
       context: .
       dockerfile: Services/Discount/Discount.API/Dockerfile
 
+  discount.grpc:
+    image: ${DOCKER_REGISTRY-}discountgrpc
+    build:
+      context: .
+      dockerfile: Services/Discount/Discount.Grpc/Dockerfile
+
 volumes:
   mongo_data: 
   portainer_data: 
   postgres_data: 
   pgadmin_data: 
+  mongoclient_data: 
+
 
