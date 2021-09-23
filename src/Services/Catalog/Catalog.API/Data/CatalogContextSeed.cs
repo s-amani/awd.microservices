@@ -1,24 +1,21 @@
-﻿using Catalog.API.Data;
-using Catalog.API.Entities;
+﻿using Catalog.API.Entities;
+using Catalog.API.Entities.Base;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Catalog.API.Services
+namespace Catalog.API.Data
 {
-    public class DatabaseInitializerService
+    public class CatalogContextSeed
     {
-        private readonly ICatalogContext<Product> _context;
-
-        public DatabaseInitializerService(ICatalogContext<Product> context)
+        public static void Seed<T>(IMongoCollection<T> collection) where T : EntityBase
         {
-            _context = context;
-        }
+            if (collection.Find(p => true).Any())
+                return;
 
-        public void Seed()
-        {
-            _context.Collection.InsertMany(GetPreconfiguredProducts());
+            //collection.InsertMany(GetPreconfiguredProducts());
         }
 
         private static IEnumerable<Product> GetPreconfiguredProducts()
@@ -86,6 +83,5 @@ namespace Catalog.API.Services
                     Category = "Home Kitchen"
                 }            };
         }
-
     }
 }

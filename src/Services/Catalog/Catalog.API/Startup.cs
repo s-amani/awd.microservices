@@ -1,6 +1,5 @@
 using Catalog.API.Data;
 using Catalog.API.Repositories;
-using Catalog.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +27,6 @@ namespace Catalog.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog.API", Version = "v1" });
             });
 
-            services.AddScoped<DatabaseInitializerService>();
             services.AddScoped(typeof(ICatalogContext<>), typeof(CatalogContext<>));
             services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));
         }
